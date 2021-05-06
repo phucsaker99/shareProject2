@@ -21,12 +21,11 @@
             android:id="@+id/imageHomeTeam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_8"
             android:contentDescription="@null"
             app:image="@{event.teamHomeBadge}"
             app:layout_constraintEnd_toStartOf="@+id/guideVerticalEvent"
-            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_calender" />
@@ -48,11 +47,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_16"
             android:contentDescription="@null"
             app:image="@{event.teamAwayBadge}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalNotification"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="@+id/guideVerticalEvent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_calender" />
@@ -99,20 +97,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_percent="0.4" />
 
         <ImageButton
             android:id="@+id/imageNotification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:contentDescription="@null"
-            app:notificationStatus="@{event.matchStatus}"
-            android:src="@{event.isNotification ? @drawable/ic_notification : @drawable/ic_no_notification}"
-            app:layout_constraintEnd_toStartOf="@+id/guideVerticalEvent"
-            app:layout_constraintStart_toStartOf="@+id/guideVerticalEvent"
-            app:layout_constraintTop_toBottomOf="@+id/textScore" />
+            android:src="@drawable/ic_notification"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:notificationStatus="@{event.matchStatus}" />
 
         <TextView
             android:id="@+id/textHorizontal"
@@ -124,7 +122,14 @@
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageNotification"
+            app:layout_constraintTop_toBottomOf="@id/textHomeName"
             app:layout_goneMarginTop="@dimen/dp_16" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineVerticalNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.8" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

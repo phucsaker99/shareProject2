@@ -2,7 +2,6 @@ package com.example.soccert.ui.more
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
 import com.example.soccert.R

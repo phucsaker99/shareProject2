@@ -40,6 +40,9 @@ class HomeViewModel(
     private val _team = MutableLiveData<List<Team>>()
     val team: LiveData<List<Team>> get() = _team
 
+    private val _notificationMatch = MutableLiveData<List<Event>>()
+    val notificationMatch: LiveData<List<Event>> get() = _notificationMatch
+
     private val competitionSubject = BehaviorSubject.create<Competition>()
     private val competitionObserver = Observer<Competition> {
         competitionSubject.onNext(it)
@@ -48,6 +51,7 @@ class HomeViewModel(
     fun getInfoSoccer() {
         getCompetitionType()
         getLeagues()
+        getEventNotification()
     }
 
     fun setCountryIdAndReload(countryID: String) {
@@ -95,7 +99,7 @@ class HomeViewModel(
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                _event.value = it
+                _event.value = checkNotification(it)
             }, {
                 if (it.message.toString() == ExceptionUtil.EXCEPTION_RETURN_OBJECT) {
                     _event.value = emptyList()
@@ -104,6 +108,36 @@ class HomeViewModel(
                 }
             })
             .addTo(disposables)
+    }
+
+    private fun checkNotification(events: List<Event>): List<Event> {
+        for (item in events) {
+            item.isNotification =
+                notificationMatch.value?.any { it.matchID == item.matchID } == true
+        }
+        return events
+    }
+
+    fun addNotification(item: Event) {
+        soccerRepository.insertEventNotification(item)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                getEventUpdateNotification()
+            }, {
+                _error.value = it.message.toString()
+            }).addTo(disposables)
+    }
+
+    fun deleteNotification(item: Event) {
+        soccerRepository.deleteEventNotification(item)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                getEventUpdateNotification()
+            }, {
+                _error.value = it.message.toString()
+            }).addTo(disposables)
     }
 
     private fun getCompetitionType() {
@@ -116,6 +150,29 @@ class HomeViewModel(
         } else {
             getLeaguesByCountry(competitionType.value.toString())
         }
+    }
+
+    private fun getEventNotification() {
+        soccerRepository.getEventNotifications()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _notificationMatch.value = it
+            }, {
+                _error.value = it.message.toString()
+            }).addTo(disposables)
+    }
+
+    private fun getEventUpdateNotification() {
+        soccerRepository.getEventNotifications()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({events ->
+                _notificationMatch.value = events
+                _event.value = _event.value?.let { checkNotification(it) }
+            }, {
+                _error.value = it.message.toString()
+            }).addTo(disposables)
     }
 
     private fun getLeaguesByCountry(countryID: String) {

@@ -17,7 +17,11 @@ import java.util.*
 
 class MatchEventFragment : BaseFragment<FragmentMatchEventBinding>() {
     private val calendar = Calendar.getInstance()
-    private val adapterEvent = MatchEventAdapter(this::itemSelectedEvent)
+    private val adapterEvent =
+        MatchEventAdapter(
+            this::itemSelectedNotification,
+            this::itemSelectedEvent
+        )
 
     override val layoutResource get() = R.layout.fragment_match_event
     override val viewModel by sharedViewModel<HomeViewModel>()
@@ -104,8 +108,17 @@ class MatchEventFragment : BaseFragment<FragmentMatchEventBinding>() {
         }
     }
 
+    private fun itemSelectedNotification(event: Event) {
+        if (event.isNotification) {
+            viewModel.deleteNotification(event)
+        } else {
+            viewModel.addNotification(event)
+        }
+    }
+
     private fun itemSelectedEvent(event: Event) {
-        val action = HomeFragmentDirections.actionHomeFragmentToDetailMatchFragment(event)
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToDetailMatchFragment(event.matchID.toInt())
         findNavController().navigate(action)
     }
 

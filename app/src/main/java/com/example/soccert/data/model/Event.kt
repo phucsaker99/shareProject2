@@ -1,6 +1,9 @@
 package com.example.soccert.data.model
 
 import android.os.Parcelable
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -52,7 +55,7 @@ data class Event(
     @ColumnInfo(name = "match_time")
     @SerializedName("match_time")
     val matchTime: String,
-    @Ignore
+    @ColumnInfo(name = "match_status")
     @SerializedName("match_status")
     val matchStatus: String?,
     @Ignore
@@ -69,7 +72,9 @@ data class Event(
     val lineup: Lineup?,
     @Ignore
     @SerializedName("substitutions")
-    val substitutions: Substitutions?
+    val substitutions: Substitutions?,
+    @Ignore
+    var isNotification: Boolean = false
 ) : Parcelable {
 
     constructor(
@@ -83,7 +88,8 @@ data class Event(
         matchAwayTeamScore: String,
         teamAwayBadge: String,
         matchDate: String,
-        matchTime: String
+        matchTime: String,
+        matchStatus: String
     ) : this(
         matchID,
         matchHomeTeamID,
@@ -98,7 +104,7 @@ data class Event(
         teamAwayBadge,
         matchDate,
         matchTime,
-        null,
+        matchStatus,
         null,
         null,
         null,
